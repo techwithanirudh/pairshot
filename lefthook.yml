@@ -1,0 +1,25 @@
+pre-commit:
+  commands:
+    lint:
+      glob: '*.{js,mjs,ts,jsx,tsx,css,scss}'
+      run: bun ultracite lint {staged_files}
+      stage_fixed: true
+    format:
+      glob: '*.{js,mjs,ts,jsx,tsx,css,scss}'
+      run: bun ultracite format {staged_files}
+      stage_fixed: true
+    spelling:
+      run: bun check:spelling {staged_files}
+      stage_fixed: true
+
+post-merge:
+  commands:
+    update-env:
+      run: bunx vercel env pull
+    install-deps:
+      run: bun i
+
+commit-msg:
+  commands:
+    'lint commit message':
+      run: bun commitlint --edit {1}

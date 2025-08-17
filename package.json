@@ -6,19 +6,30 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "ultracite lint && next lint",
+    "format": "ultracite format",
+    "types:check": "tsc --noEmit --skipLibCheck",
+    "check:spelling": "cspell -c .cspell.json --no-progress --no-summary --no-must-find-files --unique"
   },
   "dependencies": {
+    "@cspell/dict-bash": "^4.2.1",
+    "@cspell/dict-npm": "^5.2.14",
+    "cspell": "^9.2.0",
+    "next": "15.4.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.4.6"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@biomejs/biome": "2.2.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "lefthook": "^1.12.3",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "ultracite": "5.2.3"
   }
 }
