@@ -15,10 +15,15 @@
   "dependencies": {
     "@cspell/dict-bash": "^4.2.1",
     "@cspell/dict-npm": "^5.2.14",
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "cspell": "^9.2.0",
+    "lucide-react": "^0.539.0",
     "next": "15.4.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
@@ -31,6 +36,7 @@
     "cross-env": "^10.0.0",
     "lefthook": "^1.12.3",
     "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.7",
     "typescript": "^5",
     "ultracite": "5.2.3"
   }
