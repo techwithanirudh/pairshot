@@ -28,6 +28,5 @@
       "extensions": ["streetsidesoftware.code-spell-checker"]
     }
   },
-  "postCreateCommand": "./.devcontainer/scripts/configure-p10k.sh",
   "remoteUser": "bun"
 }

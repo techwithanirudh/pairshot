@@ -35,6 +35,8 @@
     "turbopack",
     "logomark",
     "bunx",
-    "bprogress"
+    "bprogress",
+    "nosniff",
+    "sameorigin"
   ]
 }
