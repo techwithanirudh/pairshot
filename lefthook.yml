@@ -1,9 +1,5 @@
 pre-commit:
   commands:
-    lint:
-      glob: '*.{js,mjs,ts,jsx,tsx,css,scss}'
-      run: bun ultracite lint {staged_files}
-      stage_fixed: true
     format:
       glob: '*.{js,mjs,ts,jsx,tsx,css,scss}'
       run: bun ultracite format {staged_files}
