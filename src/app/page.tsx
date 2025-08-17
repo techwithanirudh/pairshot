@@ -1,22 +1,18 @@
 import Image from 'next/image'
-import { ModeToggle } from '@/components/mode-toggle'
 import { buttonVariants } from '@/components/ui/button'
 
 export default function Home() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
+    <div className="grid flex-1 grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
       <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
-        <div className="flex w-full items-center justify-between gap-2">
-          <Image
-            alt="Next.js logo"
-            className="dark:invert"
-            height={38}
-            priority
-            src="/next.svg"
-            width={180}
-          />
-          <ModeToggle />
-        </div>
+        <Image
+          alt="Next.js logo"
+          className="dark:invert"
+          height={38}
+          priority
+          src="/next.svg"
+          width={180}
+        />
 
         <ol className="list-inside list-decimal text-center font-mono text-sm/6 sm:text-left">
           <li className="mb-2 tracking-[-.01em]">
