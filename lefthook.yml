@@ -1,9 +1,9 @@
 pre-commit:
+  parallel: true
   commands:
-    format:
+    biome:
       glob: '*.{js,mjs,ts,jsx,tsx,css,scss}'
-      run: bun ultracite format {staged_files}
-      stage_fixed: true
+      run: bun biome check --write {staged_files}
     spelling:
       run: bun check:spelling {staged_files}
       stage_fixed: true
