@@ -1,11 +1,11 @@
 ---
-description: Ultracite Rules - AI-Ready Formatter and Linter
+description: Biome Rules 
 globs: "**/*.{ts,tsx,js,jsx}"
 alwaysApply: true
 ---
 
 # Project Context
-Ultracite enforces strict type safety, accessibility standards, and consistent code quality for JavaScript/TypeScript projects using Biome's lightning-fast formatter and linter.
+Biome enforces strict type safety, accessibility standards, and consistent code quality for JavaScript/TypeScript projects using it's lightning-fast formatter and linter.
 
 ## Key Principles
 - Zero configuration required
@@ -309,9 +309,8 @@ Ultracite enforces strict type safety, accessibility standards, and consistent c
 - Don't use disabled tests.
 
 ## Common Tasks
-- `npx ultracite init` - Initialize Ultracite in your project
-- `npx ultracite format` - Format and fix code automatically
-- `npx ultracite lint` - Check for issues without fixing
+- `bun format` - Format and fix code automatically
+- `bun lint` - Check for issues without fixing
 
 ## Example: Error Handling
 ```typescript
