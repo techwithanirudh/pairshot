@@ -9,6 +9,9 @@ export const env = createEnv({
     OPENAI_API_KEY: z
       .string()
       .min(1, 'OPENAI_API_KEY is required. Please set it in your .env file.'),
+    // home assistant env variables
+    HOME_ASSISTANT_URL: z.string().url(),
+    HOME_ASSISTANT_TOKEN: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.url(),
