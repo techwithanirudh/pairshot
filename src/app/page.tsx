@@ -1,64 +1,169 @@
-import Image from 'next/image'
-import { buttonVariants } from '@/components/ui/button'
+'use client'
 
-export default function Home() {
+import { useChat } from '@ai-sdk/react'
+import { useState } from 'react'
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from '@/components/ai-elements/conversation'
+import { Loader } from '@/components/ai-elements/loader'
+import { Message, MessageContent } from '@/components/ai-elements/message'
+import {
+  PromptInput,
+  PromptInputModelSelect,
+  PromptInputModelSelectContent,
+  PromptInputModelSelectItem,
+  PromptInputModelSelectTrigger,
+  PromptInputModelSelectValue,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputToolbar,
+  PromptInputTools,
+} from '@/components/ai-elements/prompt-input'
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from '@/components/ai-elements/reasoning'
+import { Response } from '@/components/ai-elements/response'
+import {
+  Source,
+  Sources,
+  SourcesContent,
+  SourcesTrigger,
+} from '@/components/ai-elements/source'
+
+const models = [
+  {
+    name: 'Chat Model',
+    value: 'chat-model',
+  },
+]
+
+const ChatBotDemo = () => {
+  const [input, setInput] = useState('')
+  const [model, setModel] = useState<string>(models[0].value)
+  const { messages, sendMessage, status } = useChat()
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (input.trim()) {
+      sendMessage(
+        { text: input },
+        {
+          body: {
+            model: model,
+          },
+        }
+      )
+      setInput('')
+    }
+  }
+
   return (
-    <div className="grid flex-1 grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
-        <Image
-          alt="Next.js logo"
-          className="dark:invert"
-          height={38}
-          priority
-          src="/next.svg"
-          width={180}
-        />
+    <div className="relative mx-auto flex size-full max-w-4xl flex-1 p-6">
+      <div className="flex min-h-full flex-1 flex-col">
+        <Conversation className="h-full">
+          <ConversationContent>
+            {messages.map((message) => (
+              <div key={message.id}>
+                {message.role === 'assistant' && (
+                  <Sources>
+                    {/** biome-ignore lint/suspicious/useIterableCallbackReturn: <explanation> */}
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case 'source-url':
+                          return (
+                            <>
+                              <SourcesTrigger
+                                count={
+                                  message.parts.filter(
+                                    (part) => part.type === 'source-url'
+                                  ).length
+                                }
+                              />
+                              <SourcesContent key={`${message.id}-${i}`}>
+                                <Source
+                                  key={`${message.id}-${i}`}
+                                  href={part.url}
+                                  title={part.url}
+                                />
+                              </SourcesContent>
+                            </>
+                          )
+                      }
+                    })}
+                  </Sources>
+                )}
+                <Message from={message.role} key={message.id}>
+                  <MessageContent>
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case 'text':
+                          return (
+                            <Response key={`${message.id}-${i}`}>
+                              {part.text}
+                            </Response>
+                          )
+                        case 'reasoning':
+                          return (
+                            <Reasoning
+                              key={`${message.id}-${i}`}
+                              className="w-full"
+                              isStreaming={status === 'streaming'}
+                            >
+                              <ReasoningTrigger />
+                              <ReasoningContent>{part.text}</ReasoningContent>
+                            </Reasoning>
+                          )
+                        default:
+                          return null
+                      }
+                    })}
+                  </MessageContent>
+                </Message>
+              </div>
+            ))}
+            {status === 'submitted' && <Loader />}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
 
-        <ol className="list-inside list-decimal text-center font-mono text-sm/6 sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-mono font-semibold dark:bg-white/[.06]">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className={buttonVariants({
-              variant: 'default',
-              size: 'lg',
-            })}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt="Vercel logomark"
-              className="dark:invert"
-              height={20}
-              src="/vercel.svg"
-              width={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className={buttonVariants({
-              variant: 'outline',
-              size: 'lg',
-            })}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
+        <PromptInput onSubmit={handleSubmit} className="mt-4">
+          <PromptInputTextarea
+            onChange={(e) => setInput(e.target.value)}
+            value={input}
+          />
+          <PromptInputToolbar>
+            <PromptInputTools>
+              <PromptInputModelSelect
+                onValueChange={(value) => {
+                  setModel(value)
+                }}
+                value={model}
+              >
+                <PromptInputModelSelectTrigger>
+                  <PromptInputModelSelectValue />
+                </PromptInputModelSelectTrigger>
+                <PromptInputModelSelectContent>
+                  {models.map((model) => (
+                    <PromptInputModelSelectItem
+                      key={model.value}
+                      value={model.value}
+                    >
+                      {model.name}
+                    </PromptInputModelSelectItem>
+                  ))}
+                </PromptInputModelSelectContent>
+              </PromptInputModelSelect>
+            </PromptInputTools>
+            <PromptInputSubmit disabled={!input} status={status} />
+          </PromptInputToolbar>
+        </PromptInput>
+      </div>
     </div>
   )
 }
+
+export default ChatBotDemo

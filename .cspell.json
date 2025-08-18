@@ -38,6 +38,9 @@
     "bprogress",
     "nosniff",
     "sameorigin",
-    "sitemapindex"
+    "sitemapindex",
+    "katex",
+    "nums",
+    "dall"
   ]
 }
