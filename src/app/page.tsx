@@ -33,6 +33,13 @@ import {
   SourcesContent,
   SourcesTrigger,
 } from '@/components/ai-elements/source'
+import {
+  Tool,
+  ToolContent,
+  ToolHeader,
+  ToolInput,
+  ToolOutput,
+} from '@/components/ai-elements/tool'
 
 const models = [
   {
@@ -96,7 +103,13 @@ const ChatBotDemo = () => {
                     })}
                   </Sources>
                 )}
-                <Message from={message.role} key={message.id}>
+                <Message
+                  from={message.role}
+                  key={message.id}
+                  className={
+                    message.role === 'assistant' ? '[&>div]:min-w-full' : ''
+                  }
+                >
                   <MessageContent>
                     {message.parts.map((part, i) => {
                       switch (part.type) {
@@ -116,6 +129,26 @@ const ChatBotDemo = () => {
                               <ReasoningTrigger />
                               <ReasoningContent>{part.text}</ReasoningContent>
                             </Reasoning>
+                          )
+                        case 'dynamic-tool':
+                          return (
+                            <Tool defaultOpen={true} key={`${message.id}-${i}`}>
+                              <ToolHeader
+                                type={part.toolName}
+                                state={part.state}
+                              />
+                              <ToolContent>
+                                <ToolInput input={part.input} />
+                                <ToolOutput
+                                  output={
+                                    <Response>
+                                      {JSON.stringify(part.output, null, 2)}
+                                    </Response>
+                                  }
+                                  errorText={part.errorText}
+                                />
+                              </ToolContent>
+                            </Tool>
                           )
                         default:
                           return null

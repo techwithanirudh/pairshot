@@ -1,6 +1,7 @@
 import {
   convertToModelMessages,
   experimental_createMCPClient as createMCPClient,
+  stepCountIs,
   streamText,
   type UIMessage,
 } from 'ai'
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
     onFinish: async () => {
       await mcpClient.close()
     },
+    stopWhen: stepCountIs(10),
   })
 
   return result.toUIMessageStreamResponse({
