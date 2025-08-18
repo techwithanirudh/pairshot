@@ -37,6 +37,7 @@
     "bunx",
     "bprogress",
     "nosniff",
-    "sameorigin"
+    "sameorigin",
+    "sitemapindex"
   ]
 }

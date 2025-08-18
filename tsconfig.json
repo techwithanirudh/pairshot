@@ -21,8 +21,15 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-sitemap.config.js"
+  ],
   "exclude": ["node_modules"]
 }
