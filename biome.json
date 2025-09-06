@@ -19,7 +19,7 @@
       "!bun.lock",
       "!**/*.md",
       "!**/*.mdx",
-      "!components/ui",
+      "!src/components/ui",
       "!**/*.css",
       "!**/*.grit"
     ]
@@ -42,7 +42,8 @@
         "noUnusedImports": {
           "fix": "safe",
           "level": "info"
-        }
+        },
+        "useUniqueElementIds": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "off",
@@ -93,7 +94,8 @@
     "formatter": {
       "quoteStyle": "single",
       "semicolons": "asNeeded",
-      "trailingCommas": "es5"
+      "trailingCommas": "es5",
+      "jsxQuoteStyle": "single"
     }
   },
   "json": {

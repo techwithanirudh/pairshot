@@ -3,6 +3,6 @@ import { customProvider } from 'ai'
 
 export const myProvider = customProvider({
   languageModels: {
-    'image-model': google('gemini-2.5-flash-image'),
+    'chat-model': google.languageModel('gemini-2.5-flash-image-preview'),
   },
 })

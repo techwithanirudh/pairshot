@@ -15,8 +15,8 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
+      attribute='class'
+      defaultTheme='system'
       enableSystem
       disableTransitionOnChange
     >
@@ -30,8 +30,8 @@ export function Providers({ children }: { children: ReactNode }) {
         Link={Link}
       >
         <ProgressProvider
-          height="2px"
-          color="var(--color-primary)"
+          height='2px'
+          color='var(--color-primary)'
           options={{
             showSpinner: false,
           }}
