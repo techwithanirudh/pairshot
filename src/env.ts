@@ -21,6 +21,8 @@ export const env = createEnv({
         : z.string().min(1).optional(),
     CORS_ORIGIN: z.url().optional(),
     // BETTER_AUTH_URL: z.string().min(1).optional(),
+    // Blob
+    BLOB_READ_WRITE_TOKEN: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.url(),
