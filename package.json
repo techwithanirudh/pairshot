@@ -16,7 +16,7 @@
     "check": "biome check .",
     "check:unsafe": "biome check --write --unsafe .",
     "check:write": "biome check --write .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit --incremental false",
     "check:spelling": "cspell -c .cspell.json --no-progress --no-summary --no-must-find-files --unique",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx server/db/migrate.ts",
