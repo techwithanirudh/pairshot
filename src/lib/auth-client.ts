@@ -8,7 +8,7 @@ import type { auth } from '@/server/auth'
 export const authClient: ReturnType<typeof createAuthClient> = createAuthClient(
   {
     plugins: [inferAdditionalFields<typeof auth>()],
-    //   baseURL: env.BETTER_AUTH_URL,
+    // baseURL: env.NEXT_PUBLIC_BASE_URL,
     fetchOptions: {
       onError(e) {
         if (e.error.status === 429) {
