@@ -1,8 +1,7 @@
-import { GitHubIcon, UserButton } from '@daveyplate/better-auth-ui'
+import { UserButton } from '@daveyplate/better-auth-ui'
 import Link from 'next/link'
 
 import { ModeToggle } from './mode-toggle'
-import { Button } from './ui/button'
 
 export function Header() {
   return (
@@ -12,15 +11,6 @@ export function Header() {
       </Link>
 
       <div className="flex items-center gap-2">
-        <Link
-          href="https://github.com/techwithanirudh/ai-sdk-add-me"
-          target="_blank"
-        >
-          <Button variant="outline" size="icon" className="size-8 rounded-full">
-            <GitHubIcon />
-          </Button>
-        </Link>
-
         <ModeToggle />
         <UserButton size="icon" align="end" />
       </div>

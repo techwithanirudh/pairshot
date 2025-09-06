@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Create Next App',
-    short_name: 'Create Next App',
+    name: 'Add Me',
+    short_name: 'Add Me',
     description:
-      'Create Next App is a boilerplate for building Next.js applications with Tailwind CSS, Sonner notifications, and more.',
+      'Add Me is a boilerplate for building Next.js applications with Tailwind CSS, Sonner notifications, and more.',
     start_url: '/',
     display: 'standalone',
     background_color: '#fff',
