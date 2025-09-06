@@ -22,7 +22,7 @@ export function Header() {
         </Link>
 
         <ModeToggle />
-        <UserButton size="icon" />
+        <UserButton size="icon" align="end" />
       </div>
     </header>
   )
