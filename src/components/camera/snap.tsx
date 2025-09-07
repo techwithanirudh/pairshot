@@ -200,7 +200,7 @@ function Preview({ children }: PropsWithChildren) {
 
 function Dock() {
   const { capturedImages, removeImage, onImagesReady } = useCamera()
-  const last4 = capturedImages.slice(-4)
+  const images = capturedImages.slice(-3)
 
   return (
     <AnimatePresence>
@@ -213,9 +213,9 @@ function Dock() {
           className='-translate-x-1/2 absolute bottom-safe-offset-36 left-1/2 z-10 w-full max-w-sm transform px-4'
         >
           <div className='rounded-3xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl'>
-            <div className='scrollbar-hide flex items-center space-x-3 overflow-x-auto'>
-              {last4.map((image, idx) => {
-                const globalIndex = capturedImages.length - last4.length + idx
+            <div className='flex flex-wrap items-center justify-center gap-3'>
+              {images.map((image, idx) => {
+                const globalIndex = capturedImages.length - images.length + idx
                 return (
                   <motion.div
                     key={globalIndex}
@@ -230,7 +230,6 @@ function Dock() {
                     className='relative flex-shrink-0'
                   >
                     <div className='h-16 w-16 overflow-hidden rounded-2xl border-2 border-white/30 bg-white/5 backdrop-blur-sm'>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={image || '/placeholder.svg'}
                         alt={`Photo ${globalIndex + 1}`}
@@ -249,19 +248,19 @@ function Dock() {
                 )
               })}
 
-              {capturedImages.length > 4 && (
+              {capturedImages.length > 3 && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className='flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-white/40 border-dashed bg-white/5 backdrop-blur-sm'
                 >
                   <span className='font-medium text-white/60 text-xs'>
-                    +{capturedImages.length - 4}
+                    +{capturedImages.length - 3}
                   </span>
                 </motion.div>
               )}
 
-              <motion.button
+              {/* <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => onImagesReady?.(capturedImages)}
                 className='flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-white/40 border-dashed bg-white/5 backdrop-blur-sm'
@@ -269,7 +268,7 @@ function Dock() {
                 title='Done'
               >
                 <Check className='h-6 w-6 text-white/60' />
-              </motion.button>
+              </motion.button> */}
             </div>
           </div>
         </motion.div>
