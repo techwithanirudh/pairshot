@@ -36,11 +36,7 @@ function Page({
     )
   }
 
-  return (
-    <div>
-      <Chat />
-    </div>
-  )
+  return <Chat />
 }
 
 export default Page

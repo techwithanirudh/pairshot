@@ -23,3 +23,14 @@ TODO: Use actual color according to theme instead of -white in snap.tsx
 Split components in snap to its own directory
 In the images gallery / dock the close button is cut off
 Landscape rotation for app  
+
+Add ability to add images which you have already captured...
+Make the home screen a app with big cards like attachments, stacked over each other, when you hit plus (open the native camera)
+Keep stacking up the attachment
+Then put an input saying describe the changes you want to make
+You can keep editing from that input
+Make it desktop also
+Write in react native with expo-camera
+Add an image generating animation the image will be at the top
+Finally after pretty animation etc
+Add ability to view message history

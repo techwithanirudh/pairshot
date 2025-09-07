@@ -84,7 +84,7 @@ export function Root({
       } catch (e) {
         console.error('Failed to stop camera in finish()', e)
       }
-      
+
       setCapturedImages([])
       onFinish?.(images)
     },

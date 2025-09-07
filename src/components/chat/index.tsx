@@ -1,11 +1,12 @@
 'use client'
 
-import { type UseChatHelpers, useChat } from '@ai-sdk/react'
-import type { UIMessage } from 'ai'
-import { PaperclipIcon } from 'lucide-react'
+import { useChat } from '@ai-sdk/react'
 import type React from 'react'
-import { type ChangeEvent, memo, useCallback, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
+import type { Attachment } from '@/lib/types'
+import { PreviewAttachment } from './preview-attachment'
+import Camera from '../camera'
 import {
   PromptInput,
   PromptInputSubmit,
@@ -13,17 +14,22 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from '@/components/ai-elements/prompt-input'
-import type { Attachment } from '@/lib/types'
-import { Button } from '../ui/button'
-import { PreviewAttachment } from './preview-attachment'
-import Camera from '../camera'
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from '@/components/ai-elements/conversation'
+import { Action, Actions } from '@/components/ai-elements/actions'
+import { Loader } from '../ai-elements/loader'
+import { cn } from '@/lib/utils'
 
 function Chat() {
   const [input, setInput] = useState('')
-  const { sendMessage, status, regenerate } = useChat()
+  const { sendMessage, status, messages, regenerate } = useChat()
   const [attachments, setAttachments] = useState<Array<Attachment>>([])
-
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([])
+
+  const [isCameraOpen, setIsCameraOpen] = useState(true)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,6 +81,7 @@ function Chat() {
 
   const handleFiles = useCallback(
     async (files: File[]) => {
+      setIsCameraOpen(false)
       setUploadQueue(files.map((file) => file.name))
 
       try {
@@ -98,8 +105,8 @@ function Chat() {
   )
 
   return (
-    <div className='flex h-full flex-col'>
-      {uploadQueue.length === 0 && (
+    <div className='relative flex h-screen flex-col'>
+      {isCameraOpen ? (
         <Camera.Root onFinish={handleFiles}>
           <Camera.Preview>
             <Camera.Header />
@@ -107,35 +114,99 @@ function Chat() {
             <Camera.Controls />
           </Camera.Preview>
         </Camera.Root>
-      )}
-      {(attachments.length > 0 || uploadQueue.length > 0) && (
-        <div
-          data-testid='attachments-preview'
-          className='flex flex-row items-end gap-2 overflow-x-scroll px-3 py-2'
-        >
-          {attachments.map((attachment) => (
-            <PreviewAttachment
-              key={attachment.url}
-              attachment={attachment}
-              onRemove={() => {
-                setAttachments((currentAttachments) =>
-                  currentAttachments.filter((a) => a.url !== attachment.url)
-                )
-              }}
-            />
-          ))}
+      ) : (
+        <div className='relative flex flex-1 flex-col items-center justify-center p-2'>
+          <Conversation className='h-full overflow-y-auto'>
+            <ConversationContent>
+              {messages.map((message) => (
+                <div key={message.id}>
+                  <div
+                    className={cn('flex flex-col', {
+                      'gap-2 md:gap-4': message.parts?.some(
+                        (p) => p.type === 'text' && p.text?.trim()
+                      ),
+                      'min-h-96': message.role === 'assistant' && true,
+                      'w-full':
+                        (message.role === 'assistant' &&
+                          message.parts?.some(
+                            (p) => p.type === 'text' && p.text?.trim()
+                          )) ||
+                        true,
+                      'max-w-[90%] sm:max-w-[min(fit-content,80%)]':
+                        message.role === 'user' && true,
+                    })}
+                  >
+                    {message.parts.filter((part) => part.type === 'file')
+                      .length > 0 && (
+                      <div
+                        data-testid={`message-attachments`}
+                        className='flex flex-row justify-end gap-2'
+                      >
+                        {message.parts
+                          .filter((part) => part.type === 'file')
+                          .map((attachment) => (
+                            <PreviewAttachment
+                              key={attachment.url}
+                              attachment={{
+                                name: attachment.filename ?? 'file',
+                                contentType: attachment.mediaType,
+                                url: attachment.url,
+                              }}
+                            />
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {status === 'submitted' && <Loader />}
+            </ConversationContent>
+            <ConversationScrollButton />
+          </Conversation>
+          <PromptInput onSubmit={handleSubmit} className='border-none bg-card'>
+            {(attachments.length > 0 || uploadQueue.length > 0) && (
+              <div
+                data-testid='attachments-preview'
+                className='flex flex-row items-end gap-2 overflow-x-scroll px-3 py-2'
+              >
+                {attachments.map((attachment) => (
+                  <PreviewAttachment
+                    key={attachment.url}
+                    attachment={attachment}
+                    onRemove={() => {
+                      setAttachments((currentAttachments) =>
+                        currentAttachments.filter(
+                          (a) => a.url !== attachment.url
+                        )
+                      )
+                    }}
+                  />
+                ))}
 
-          {uploadQueue.map((filename) => (
-            <PreviewAttachment
-              key={filename}
-              attachment={{
-                url: '',
-                name: filename,
-                contentType: '',
-              }}
-              isUploading={true}
+                {uploadQueue.map((filename) => (
+                  <PreviewAttachment
+                    key={filename}
+                    attachment={{
+                      url: '',
+                      name: filename,
+                      contentType: '',
+                    }}
+                    isUploading={true}
+                  />
+                ))}
+              </div>
+            )}
+
+            <PromptInputTextarea
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              placeholder='Modify the image in any way you want...'
             />
-          ))}
+            <PromptInputToolbar>
+              <PromptInputTools />
+              <PromptInputSubmit disabled={!input} status={status} />
+            </PromptInputToolbar>
+          </PromptInput>
         </div>
       )}
     </div>
