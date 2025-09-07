@@ -12,6 +12,7 @@ import {
 } from 'react'
 import type Webcam from 'react-webcam'
 import useSound from 'use-sound'
+import { dataUrlToFile } from '@/lib/utils'
 
 type FacingMode = 'user' | 'environment'
 
@@ -19,12 +20,11 @@ type CameraContextValue = {
   webcamRef: React.RefObject<Webcam | null>
   facingMode: FacingMode
   setFacingMode: React.Dispatch<React.SetStateAction<FacingMode>>
-  capturedImages: string[]
+  capturedImages: File[]
   removeImage: (index: number) => void
   capture: () => void
   playShutter: () => void
-  // called after camera streams/tracks are stopped and camera is torn down
-  onFinish?: (images: string[]) => void
+  onFinish?: (images: File[]) => void
 }
 
 const CameraCtx = createContext<CameraContextValue | null>(null)
@@ -35,7 +35,7 @@ export const useCamera = () => {
 }
 
 interface CameraRootProps {
-  onFinish?: (images: string[]) => void
+  onFinish?: (images: File[]) => void
   initialFacing?: FacingMode
 }
 
@@ -44,7 +44,7 @@ export function Root({
   onFinish,
   initialFacing = 'environment',
 }: PropsWithChildren<CameraRootProps>) {
-  const [capturedImages, setCapturedImages] = useState<string[]>([])
+  const [capturedImages, setCapturedImages] = useState<File[]>([])
   const [facingMode, setFacingMode] = useState<FacingMode>(initialFacing)
 
   const webcamRef = useRef<Webcam | null>(null)
@@ -53,11 +53,17 @@ export function Root({
     interrupt: true,
   })
 
-  const capture = useCallback(() => {
+  const capture = useCallback(async () => {
     playShutter()
     const shot = webcamRef.current?.getScreenshot()
     if (!shot) return
-    setCapturedImages((prev) => [...prev, shot])
+
+    try {
+      const file = await dataUrlToFile(shot, `capture-${Date.now()}.png`)
+      setCapturedImages((prev) => [...prev, file])
+    } catch (e) {
+      console.error('Failed to convert screenshot to file', e)
+    }
   }, [playShutter])
 
   const removeImage = useCallback((index: number) => {
@@ -65,7 +71,7 @@ export function Root({
   }, [])
 
   const finish = useCallback(
-    (images: string[]) => {
+    (images: File[]) => {
       try {
         const videoEl = webcamRef.current?.video
         const stream = videoEl?.srcObject ?? null
@@ -78,7 +84,8 @@ export function Root({
       } catch (e) {
         console.error('Failed to stop camera in finish()', e)
       }
-
+      
+      setCapturedImages([])
       onFinish?.(images)
     },
     [onFinish]

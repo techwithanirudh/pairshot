@@ -38,7 +38,7 @@ export function Dock() {
                     <div className='h-16 w-16 overflow-hidden rounded-2xl border-2 border-white/30 bg-white/5 backdrop-blur-sm'>
                       <picture>
                         <img
-                          src={image || '/placeholder.svg'}
+                          src={URL.createObjectURL(image) || '/placeholder.svg'}
                           alt={`Thumbnail ${globalIndex + 1}`}
                           className='h-full w-full object-cover'
                         />

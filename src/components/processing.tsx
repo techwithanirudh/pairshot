@@ -2,15 +2,15 @@
 
 import { Plus, Sparkles, Zap } from 'lucide-react'
 import { useState } from 'react'
-import { Progress } from './ui/progress'
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from './ui/card'
+import { Progress } from './ui/progress'
 
 interface ProcessingScreenProps {
   images: string[]
@@ -43,7 +43,10 @@ export function ProcessingScreen({ images }: ProcessingScreenProps) {
         <CardContent className='px-2'>
           <div className='flex items-center justify-center space-x-4'>
             {images.map((image, index) => (
-              <div key={index} className='relative flex-shrink-0 rotate-combine'>
+              <div
+                key={index}
+                className='relative flex-shrink-0 rotate-combine'
+              >
                 <div className='h-24 w-20 overflow-hidden rounded-xl border-2 border-white/20 bg-card shadow-lg'>
                   <img
                     src={image || '/placeholder.svg'}

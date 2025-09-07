@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { App } from '@/app/page.client'
+import Page from '@/app/page.client'
 import { auth } from '@/server/auth'
 
 const Home = async () => {
@@ -12,7 +12,7 @@ const Home = async () => {
     return redirect('/auth/sign-in')
   }
 
-  return <App session={session} />
+  return <Page session={session} />
 }
 
 export default Home

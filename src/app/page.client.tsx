@@ -3,11 +3,10 @@ import type { Session, User } from 'better-auth'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import Camera from '@/components/camera'
-import { ProcessingScreen } from '@/components/processing'
+import Chat from '@/components/chat'
 import { UnsupportedPlatform } from '@/components/unsupported-platform'
 
-export function App({
+function Page({
   session: _session,
 }: {
   session: {
@@ -20,11 +19,6 @@ export function App({
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  const [images, setImages] = useState<string[]>([])
-  const [status, setStatus] = useState<
-    'capturing' | 'processing' | 'completed' | 'error'
-  >('capturing')
 
   if (!mounted) {
     return (
@@ -42,25 +36,11 @@ export function App({
     )
   }
 
-  const onFinish = async (imgs: string[]) => {
-    setImages(imgs)
-    setStatus('processing')
-  }
-
   return (
     <div>
-      {status === 'capturing' && (
-        <Camera.Root onFinish={onFinish}>
-          <Camera.Preview>
-            <Camera.Header />
-            <Camera.Dock />
-            <Camera.Controls />
-          </Camera.Preview>
-        </Camera.Root>
-      )}
-      {status === 'processing' && <ProcessingScreen images={images} />}
-      {status === 'completed' && <div>Completed</div>}
-      {status === 'error' && <div>Error</div>}
+      <Chat />
     </div>
   )
 }
+
+export default Page
