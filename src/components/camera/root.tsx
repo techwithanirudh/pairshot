@@ -72,7 +72,7 @@ export function Root({
 
         if (stream instanceof MediaStream) {
           for (const track of stream.getTracks()) {
-            track.stop();
+            track.stop()
           }
         }
       } catch (e) {

@@ -121,3 +121,19 @@
     @apply bg-background text-foreground overflow-hidden;
   }
 }
+
+@theme inline {
+  --animate-progress: progress  1s infinite ease-in-out;
+
+  @keyframes progress {
+    0% {
+      transform: translateX(0) scaleX(0);
+    }
+    40% {
+      transform: translateX(0) scaleX(0.4);
+    }
+    100% {
+      transform: translateX(100%) scaleX(0.5);
+    }
+  }
+}
