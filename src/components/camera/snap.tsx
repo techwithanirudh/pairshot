@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Camera as CameraIcon,
-  FlipHorizontal,
-  Plus,
-  RotateCcw,
-  Settings,
-  X,
-} from 'lucide-react'
+import { Check, RotateCcw, Settings, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import type React from 'react'
 import {
@@ -21,7 +14,10 @@ import {
 } from 'react'
 import Webcam from 'react-webcam'
 import useSound from 'use-sound'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { UserButton } from '@daveyplate/better-auth-ui'
+import { ModeToggle } from '../mode-toggle'
 
 type FacingMode = 'user' | 'environment'
 
@@ -112,7 +108,7 @@ function Root({
 }
 
 function Header() {
-  const { facingMode, setFacingMode } = useCamera()
+  const { facingMode, setFacingMode, capturedImages } = useCamera()
 
   const toggleCamera = useCallback(() => {
     setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'))
@@ -122,42 +118,52 @@ function Header() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className='absolute top-0 right-0 left-0 z-10 flex h-16'
+      className='absolute inset-0 z-10 flex h-16'
     >
       <div className='absolute inset-0 bg-black/30 backdrop-blur-sm' />
       <div className='relative z-10 flex flex-1 items-center justify-between px-safe-or-4'>
-        <div className='flex items-center space-x-3'>
-          <motion.div
-            whileTap={{ scale: 0.95 }}
-            className='flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-md'
-            aria-hidden
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+        >
+          <div
+            className={cn(
+              buttonVariants({ variant: 'ghost', size: 'icon' }),
+              'rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md hover:bg-white/30'
+            )}
           >
-            <CameraIcon className='h-4 w-4 text-white' />
-          </motion.div>
-        </div>
+            <span className='font-medium text-sm text-white'>
+              {capturedImages.length}
+            </span>
+          </div>
+        </motion.div>
 
         <div className='flex items-center space-x-3'>
           <motion.div whileTap={{ scale: 0.95 }}>
             <Button
               variant='ghost'
               size='icon'
-              className='border border-white/20 text-white backdrop-blur-md hover:bg-white/20'
+              className='rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md hover:bg-white/30'
               onClick={toggleCamera}
               aria-label={`Switch camera, current ${facingMode}`}
             >
               <RotateCcw className='h-5 w-5' />
             </Button>
           </motion.div>
-          <motion.div whileTap={{ scale: 0.95 }}>
+          {/* <motion.div whileTap={{ scale: 0.95 }}>
             <Button
               variant='ghost'
               size='icon'
-              className='border border-white/20 text-white backdrop-blur-md hover:bg-white/20'
+              className='rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md hover:bg-white/30'
               aria-label='Open settings'
             >
               <Settings className='h-5 w-5' />
             </Button>
-          </motion.div>
+          </motion.div> */}
+          <ModeToggle />
+          <UserButton size='icon' align='end' />
         </div>
       </div>
     </motion.div>
@@ -258,7 +264,7 @@ function Dock() {
               )}
 
               <div className='flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-white/40 border-dashed bg-white/5 backdrop-blur-sm'>
-                <Plus className='h-6 w-6 text-white/60' />
+                <Check className='h-6 w-6 text-white/60' />
               </div>
             </div>
           </div>
@@ -312,29 +318,6 @@ function Controls() {
   )
 }
 
-function CountBadge() {
-  const { capturedImages } = useCamera()
-  return (
-    <AnimatePresence>
-      {capturedImages.length > 0 && (
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0, opacity: 0 }}
-          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          className='absolute top-32 right-6 z-10'
-        >
-          <div className='rounded-full border border-white/20 bg-black/30 px-3 py-1 backdrop-blur-xl'>
-            <span className='font-medium text-sm text-white'>
-              {capturedImages.length}
-            </span>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
-
 function Gallery() {
   return <Dock />
 }
@@ -346,5 +329,4 @@ export const Camera = {
   Dock,
   Gallery,
   Controls,
-  CountBadge,
 }

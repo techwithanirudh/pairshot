@@ -16,3 +16,5 @@ Add ability to zoom on camera
 App breaks in landscape mode
 Set status bar color to black
 Fix the bug where the camera takes a sec to load and zooms in at the start
+
+Remove authentication

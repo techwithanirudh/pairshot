@@ -39,7 +39,7 @@ export default function RootLayout({
           name='viewport'
           content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
         />
-        <meta name="theme-color" content="#000" />
+        <meta name='theme-color' content='#000' />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-svh flex-col antialiased`}
