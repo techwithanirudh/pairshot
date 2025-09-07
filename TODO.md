@@ -8,3 +8,7 @@ when you hit done it calls the ai sdk with nano banana to combine the image and 
 Require auth for the image endpoint
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot#image-generation
 Make a template for AI SDK saying AI SDK Nano banana with the chat
+Add anonymous sign in plugin
+When uploading images use unique file names
+Make it a PWA
+Add ability to add custom images without camera
