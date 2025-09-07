@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import Chat from '@/components/chat'
+import { Camera } from '@/components/camera'
 import { auth } from '@/server/auth'
 
 const Home = async () => {
@@ -12,11 +12,7 @@ const Home = async () => {
     return redirect('/auth/sign-in')
   }
 
-  return (
-    <div className='relative mx-auto size-full h-[calc(100svh_-_theme(spacing.16))] max-w-4xl p-6'>
-      <Chat />
-    </div>
-  )
+  return <Camera session={session} />
 }
 
 export default Home

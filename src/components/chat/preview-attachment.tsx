@@ -1,7 +1,7 @@
 import { XIcon } from 'lucide-react'
 import type { Attachment } from '@/lib/types'
-import { Loader } from './ai-elements/loader'
-import { Button } from './ui/button'
+import { Loader } from '../ai-elements/loader'
+import { Button } from '../ui/button'
 
 export const PreviewAttachment = ({
   attachment,

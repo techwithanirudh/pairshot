@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 
 import '@/styles/globals.css'
 
-import { Header } from '@/components/header'
 import { Providers } from './providers'
 
 const geistSans = Geist({
@@ -39,7 +38,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-svh flex-col antialiased`}
       >
         <Providers>
-          <Header />
+          {/* <Header /> */}
           {children}
         </Providers>
       </body>

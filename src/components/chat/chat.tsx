@@ -36,8 +36,8 @@ import {
 import { Response } from '@/components/ai-elements/response'
 import type { Attachment } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { Button } from '../ui/button'
 import { PreviewAttachment } from './preview-attachment'
-import { Button } from './ui/button'
 
 function PureAttachmentsButton({
   fileInputRef,
