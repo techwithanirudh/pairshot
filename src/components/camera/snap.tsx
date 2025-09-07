@@ -131,10 +131,10 @@ function Header() {
           <div
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'icon' }),
-              'rounded-full border backdrop-blur-md'
+              'rounded-full border bg-accent/20 text-accent-foreground backdrop-blur-md hover:!bg-accent/30'
             )}
           >
-            <span className='font-medium text-sm text-foreground'>
+            <span className='font-medium text-sm text-accent-foreground'>
               {capturedImages.length}
             </span>
           </div>
@@ -145,19 +145,30 @@ function Header() {
             <Button
               variant='ghost'
               size='icon'
-              className='rounded-full border backdrop-blur-md'
+              className='rounded-full border bg-accent/20 text-accent-foreground backdrop-blur-md hover:!bg-accent/30'
               onClick={toggleCamera}
               aria-label={`Switch camera, current ${facingMode}`}
             >
               <RotateCcw className='h-5 w-5' />
             </Button>
           </motion.div>
-          <motion.div whileTap={{ scale: 0.95 }}> 
-            <UserButton size='icon' align='end' classNames={{
-              trigger: {
-                base: 'rounded-full border backdrop-blur-md'
-              }
-            }} />
+          <motion.div whileTap={{ scale: 0.95 }}>
+            <UserButton
+              size='icon'
+              align='end'
+              classNames={{
+                trigger: {
+                  base: 'rounded-full border border-accent/30',
+                  avatar: {
+                    skeleton: 'size-9',
+                    base: 'size-9',
+                    fallback: 'size-9',
+                    fallbackIcon: 'size-9',
+                    image: 'size-9',
+                  }
+                },
+              }}
+            />
           </motion.div>
         </div>
       </div>
@@ -209,7 +220,7 @@ function Dock() {
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           className='-translate-x-1/2 absolute bottom-32 left-1/2 z-10 w-full max-w-sm transform px-4'
         >
-          <div className='rounded-3xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl'>
+          <div className='rounded-3xl border border-white/20  -white/10 p-4 shadow-2xl backdrop-blur-xl'>
             <div className='scrollbar-hide flex items-center space-x-3 overflow-x-auto'>
               {last4.map((image, idx) => {
                 const globalIndex = capturedImages.length - last4.length + idx
@@ -292,7 +303,7 @@ function Controls() {
         >
           <Button
             onClick={capture}
-            className='relative h-20 w-20 rounded-full border-2 border-white/20 bg-white/50 p-0 shadow-2xl backdrop-blur-xl hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-50'
+            className='relative h-20 w-20 rounded-full border-2 border-input/20 bg-white/50 p-0 shadow-2xl backdrop-blur-xl hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-50'
           >
             <div className='h-16 w-16 rounded-full border border-gray-200 bg-white shadow-inner' />
           </Button>
