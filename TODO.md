@@ -8,3 +8,11 @@ when you hit done it calls the ai sdk with nano banana to combine the image and 
 Require auth for the image endpoint
 https://ai-sdk.dev/docs/ai-sdk-ui/chatbot#image-generation
 Make a template for AI SDK saying AI SDK Nano banana with the chat
+Env add ability to have multiple cors origins through zod refine
+
+Use safe area insets so that it works in safari, etc. for padding, also remove the header at the top
+Create an icon from ray.so
+Add ability to zoom on camera
+App breaks in landscape mode
+Set status bar color to black
+Fix the bug where the camera takes a sec to load and zooms in at the start

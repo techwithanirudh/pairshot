@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { Camera } from '@/components/camera'
+import { App } from '@/components/camera'
 import { auth } from '@/server/auth'
 
 const Home = async () => {
@@ -12,7 +12,7 @@ const Home = async () => {
     return redirect('/auth/sign-in')
   }
 
-  return <Camera session={session} />
+  return <App session={session} />
 }
 
 export default Home

@@ -19,7 +19,23 @@ export const env = createEnv({
       process.env.NODE_ENV === 'production'
         ? z.string().min(1)
         : z.string().min(1).optional(),
-    CORS_ORIGIN: z.url().optional(),
+    CORS_ORIGIN: z.preprocess((val) => {
+      if (typeof val === 'string') {
+        const s = val.trim()
+        if (s === '') return undefined
+        try {
+          const parsed = JSON.parse(s)
+          if (Array.isArray(parsed)) return parsed
+        } catch {
+          // ignore JSON parse errors
+        }
+        return s
+          .split(',')
+          .map((p) => p.trim())
+          .filter(Boolean)
+      }
+      return val
+    }, z.array(z.url()).optional()),
     // BETTER_AUTH_URL: z.string().min(1).optional(),
     // Blob
     BLOB_READ_WRITE_TOKEN: z.string().min(1),
