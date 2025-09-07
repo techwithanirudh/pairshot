@@ -1,12 +1,19 @@
 'use client'
-import type { Session } from 'better-auth'
+import type { Session, User } from 'better-auth'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { UnsupportedPlatform } from '@/components/unsupported-platform'
 import { Camera } from './snap'
 
-export function App({ session }: { session: Session }) {
+export function App({
+  session,
+}: {
+  session: {
+    user: User
+    session: Session
+  }
+}) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {

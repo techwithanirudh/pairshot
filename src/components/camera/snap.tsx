@@ -1,5 +1,6 @@
 'use client'
 
+import { UserButton } from '@daveyplate/better-auth-ui'
 import { Check, RotateCcw, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import type React from 'react'
@@ -16,7 +17,6 @@ import Webcam from 'react-webcam'
 import useSound from 'use-sound'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { UserButton } from '@daveyplate/better-auth-ui'
 
 type FacingMode = 'user' | 'environment'
 
@@ -123,10 +123,10 @@ function Header() {
           <div
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'icon' }),
-              'rounded-full border bg-accent/20 text-accent-foreground backdrop-blur-md hover:!bg-accent/30'
+              'hover:!bg-accent/30 rounded-full border bg-accent/20 text-accent-foreground backdrop-blur-md'
             )}
           >
-            <span className='font-medium text-sm text-accent-foreground'>
+            <span className='font-medium text-accent-foreground text-sm'>
               {capturedImages.length}
             </span>
           </div>
@@ -137,7 +137,7 @@ function Header() {
             <Button
               variant='ghost'
               size='icon'
-              className='rounded-full border bg-accent/20 text-accent-foreground backdrop-blur-md hover:!bg-accent/30'
+              className='hover:!bg-accent/30 rounded-full border bg-accent/20 text-accent-foreground backdrop-blur-md'
               onClick={toggleCamera}
               aria-label={`Switch camera, current ${facingMode}`}
             >
@@ -210,7 +210,7 @@ function Dock() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          className='-translate-x-1/2 absolute bottom-32 left-1/2 z-10 w-full max-w-sm transform px-4'
+          className='-translate-x-1/2 absolute bottom-safe-offset-36 left-1/2 z-10 w-full max-w-sm transform px-4'
         >
           <div className='rounded-3xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl'>
             <div className='scrollbar-hide flex items-center space-x-3 overflow-x-auto'>
@@ -279,10 +279,10 @@ function Dock() {
 }
 
 function Controls() {
-  const { capture, capturedImages } = useCamera()
+  const { capture, capturedImages, onImagesReady } = useCamera()
 
   return (
-    <div className='absolute right-0 bottom-8 left-0 z-10'>
+    <div className='absolute right-safe-offset-0 bottom-safe-offset-12 left-safe-offset-0 z-10'>
       <div className='flex items-center justify-center'>
         {/* center container - capture stays centered, secondary button is absolutely positioned */}
         <div className='relative'>
@@ -302,13 +302,13 @@ function Controls() {
           {capturedImages.length > 0 && (
             <motion.div
               whileTap={{ scale: 0.9 }}
-              className='absolute left-full ml-6 top-1/2 -translate-y-1/2'
+              className='-translate-y-1/2 absolute top-1/2 left-full ml-6'
             >
               <Button
                 variant='ghost'
                 size='icon'
-                className='size-8 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white hover:bg-white/25 shadow-lg'
-                onClick={() => {}}
+                className='size-8 rounded-full border border-white/30 bg-white/15 text-white shadow-lg backdrop-blur-xl hover:bg-white/25'
+                onClick={() => onImagesReady?.(capturedImages)}
               >
                 <Check className='size-5' />
               </Button>
