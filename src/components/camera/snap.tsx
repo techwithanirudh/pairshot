@@ -120,7 +120,7 @@ function Header() {
       animate={{ opacity: 1, y: 0 }}
       className='absolute inset-0 z-10 flex h-16'
     >
-      <div className='absolute inset-0 bg-black/30 backdrop-blur-sm' />
+      <div className='absolute inset-0 bg-background/30 backdrop-blur-sm' />
       <div className='relative z-10 flex flex-1 items-center justify-between px-safe-or-4'>
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -131,10 +131,10 @@ function Header() {
           <div
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'icon' }),
-              'rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md hover:bg-white/30'
+              'rounded-full border backdrop-blur-md'
             )}
           >
-            <span className='font-medium text-sm text-white'>
+            <span className='font-medium text-sm text-foreground'>
               {capturedImages.length}
             </span>
           </div>
@@ -145,25 +145,20 @@ function Header() {
             <Button
               variant='ghost'
               size='icon'
-              className='rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md hover:bg-white/30'
+              className='rounded-full border backdrop-blur-md'
               onClick={toggleCamera}
               aria-label={`Switch camera, current ${facingMode}`}
             >
               <RotateCcw className='h-5 w-5' />
             </Button>
           </motion.div>
-          {/* <motion.div whileTap={{ scale: 0.95 }}>
-            <Button
-              variant='ghost'
-              size='icon'
-              className='rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md hover:bg-white/30'
-              aria-label='Open settings'
-            >
-              <Settings className='h-5 w-5' />
-            </Button>
-          </motion.div> */}
-          <ModeToggle />
-          <UserButton size='icon' align='end' />
+          <motion.div whileTap={{ scale: 0.95 }}> 
+            <UserButton size='icon' align='end' classNames={{
+              trigger: {
+                base: 'rounded-full border backdrop-blur-md'
+              }
+            }} />
+          </motion.div>
         </div>
       </div>
     </motion.div>
