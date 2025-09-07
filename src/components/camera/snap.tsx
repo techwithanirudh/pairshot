@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, RotateCcw, Settings, X } from 'lucide-react'
+import { Check, RotateCcw, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import type React from 'react'
 import {
@@ -17,7 +17,6 @@ import useSound from 'use-sound'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { UserButton } from '@daveyplate/better-auth-ui'
-import { ModeToggle } from '../mode-toggle'
 
 type FacingMode = 'user' | 'environment'
 
@@ -29,8 +28,6 @@ type CameraContextValue = {
   removeImage: (index: number) => void
   capture: () => void
   playShutter: () => void
-  showDock: boolean
-  setShowDock: React.Dispatch<React.SetStateAction<boolean>>
   onImagesReady?: (images: string[]) => void
 }
 
@@ -53,7 +50,6 @@ function Root({
 }: PropsWithChildren<CameraRootProps>) {
   const [capturedImages, setCapturedImages] = useState<string[]>([])
   const [facingMode, setFacingMode] = useState<FacingMode>(initialFacing)
-  const [showDock, setShowDock] = useState(false)
 
   const webcamRef = useRef<Webcam | null>(null)
 
@@ -64,14 +60,13 @@ function Root({
 
   const capture = useCallback(() => {
     playShutter()
-
     const shot = webcamRef.current?.getScreenshot()
     if (!shot) return
     setCapturedImages((prev) => [...prev, shot])
-    setShowDock(true)
   }, [playShutter])
 
   const removeImage = useCallback((index: number) => {
+    // remove by index in the full list
     setCapturedImages((prev) => prev.filter((_, i) => i !== index))
   }, [])
 
@@ -84,8 +79,6 @@ function Root({
       removeImage,
       capture,
       playShutter,
-      showDock,
-      setShowDock,
       onImagesReady,
     }),
     [
@@ -94,7 +87,6 @@ function Root({
       removeImage,
       capture,
       playShutter,
-      showDock,
       onImagesReady,
     ]
   )
@@ -165,7 +157,7 @@ function Header() {
                     fallback: 'size-9',
                     fallbackIcon: 'size-9',
                     image: 'size-9',
-                  }
+                  },
                 },
               }}
             />
@@ -207,12 +199,12 @@ function Preview({ children }: PropsWithChildren) {
 }
 
 function Dock() {
-  const { capturedImages, removeImage, showDock } = useCamera()
+  const { capturedImages, removeImage, onImagesReady } = useCamera()
   const last4 = capturedImages.slice(-4)
 
   return (
     <AnimatePresence>
-      {capturedImages.length > 0 && showDock && (
+      {capturedImages.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -220,7 +212,7 @@ function Dock() {
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           className='-translate-x-1/2 absolute bottom-32 left-1/2 z-10 w-full max-w-sm transform px-4'
         >
-          <div className='rounded-3xl border border-white/20  -white/10 p-4 shadow-2xl backdrop-blur-xl'>
+          <div className='rounded-3xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl'>
             <div className='scrollbar-hide flex items-center space-x-3 overflow-x-auto'>
               {last4.map((image, idx) => {
                 const globalIndex = capturedImages.length - last4.length + idx
@@ -269,9 +261,15 @@ function Dock() {
                 </motion.div>
               )}
 
-              <div className='flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-white/40 border-dashed bg-white/5 backdrop-blur-sm'>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => onImagesReady?.(capturedImages)}
+                className='flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-white/40 border-dashed bg-white/5 backdrop-blur-sm'
+                aria-label='Done'
+                title='Done'
+              >
                 <Check className='h-6 w-6 text-white/60' />
-              </div>
+              </motion.button>
             </div>
           </div>
         </motion.div>
@@ -281,51 +279,45 @@ function Dock() {
 }
 
 function Controls() {
-  const { capture } = useCamera()
+  const { capture, capturedImages } = useCamera()
 
   return (
     <div className='absolute right-0 bottom-8 left-0 z-10'>
-      <div className='flex items-center justify-center space-x-8'>
-        {/* <motion.div whileTap={{ scale: 0.9 }}>
-          <Button
-            variant='ghost'
-            size='icon'
-            className='h-12 w-12 rounded-xl border border-white/30 bg-white/15 text-white shadow-lg backdrop-blur-xl hover:bg-white/25'
+      <div className='flex items-center justify-center'>
+        {/* center container - capture stays centered, secondary button is absolutely positioned */}
+        <div className='relative'>
+          <motion.div
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: 'spring', damping: 15, stiffness: 400 }}
           >
-            <div className='h-6 w-6 rounded-sm bg-white/60' />
-          </Button>
-        </motion.div> */}
+            <Button
+              onClick={capture}
+              className='relative h-20 w-20 rounded-full border-2 border-input/20 bg-white/50 p-0 shadow-2xl backdrop-blur-xl hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-50'
+            >
+              <div className='h-16 w-16 rounded-full border border-gray-200 bg-white shadow-inner' />
+            </Button>
+          </motion.div>
 
-        <motion.div
-          whileTap={{ scale: 0.95 }}
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: 'spring', damping: 15, stiffness: 400 }}
-        >
-          <Button
-            onClick={capture}
-            className='relative h-20 w-20 rounded-full border-2 border-input/20 bg-white/50 p-0 shadow-2xl backdrop-blur-xl hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-50'
-          >
-            <div className='h-16 w-16 rounded-full border border-gray-200 bg-white shadow-inner' />
-          </Button>
-        </motion.div>
-
-        {/* <motion.div whileTap={{ scale: 0.9 }}>
-          <Button
-            variant='ghost'
-            size='icon'
-            className='w-12 h-12 rounded-xl bg-white/15 backdrop-blur-xl border border-white/30 text-white hover:bg-white/25 shadow-lg'
-            onClick={toggleCamera}
-          >
-            <FlipHorizontal className='w-5 h-5' />
-          </Button>
-        </motion.div> */}
+          {capturedImages.length > 0 && (
+            <motion.div
+              whileTap={{ scale: 0.9 }}
+              className='absolute left-full ml-6 top-1/2 -translate-y-1/2'
+            >
+              <Button
+                variant='ghost'
+                size='icon'
+                className='size-8 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white hover:bg-white/25 shadow-lg'
+                onClick={() => {}}
+              >
+                <Check className='size-5' />
+              </Button>
+            </motion.div>
+          )}
+        </div>
       </div>
     </div>
   )
-}
-
-function Gallery() {
-  return <Dock />
 }
 
 export const Camera = {
@@ -333,6 +325,5 @@ export const Camera = {
   Header,
   Preview,
   Dock,
-  Gallery,
   Controls,
 }

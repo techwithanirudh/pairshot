@@ -20,3 +20,5 @@ Fix the bug where the camera takes a sec to load and zooms in at the start
 Remove authentication
 TODO: Use actual color according to theme instead of -white in snap.tsx
 (e.g border-white to border-input, etc. bg0)
+Split components in snap to its own directory
+In the images gallery / dock the close button is cut off
