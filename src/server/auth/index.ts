@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import { env } from '@/env'
 import { db } from '@/server/db'
 import * as schema from '@/server/db/schema'
+import { anonymous } from 'better-auth/plugins'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -14,6 +15,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  plugins: [anonymous()],
   trustedOrigins: env.CORS_ORIGIN,
   baseURL: env.NEXT_PUBLIC_BASE_URL,
 })

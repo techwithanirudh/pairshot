@@ -16,7 +16,7 @@ export function Dock() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          className='-translate-x-1/2 absolute bottom-safe-offset-36 left-1/2 z-10 w-full max-w-sm transform px-4'
+          className='-translate-x-1/2 absolute bottom-safe-offset-32 left-1/2 z-10 w-full max-w-sm transform px-4'
         >
           <div className='rounded-3xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl'>
             <div className='flex flex-wrap items-center justify-center gap-3'>

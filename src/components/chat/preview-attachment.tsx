@@ -2,24 +2,28 @@ import { XIcon } from 'lucide-react'
 import type { Attachment } from '@/lib/types'
 import { Loader } from '../ai-elements/loader'
 import { Button } from '../ui/button'
+import { cn } from '@/lib/utils'
 
 export const PreviewAttachment = ({
   attachment,
   isUploading = false,
   onRemove,
-  onEdit,
+  className,
 }: {
   attachment: Attachment
   isUploading?: boolean
   onRemove?: () => void
-  onEdit?: () => void
+  className?: string
 }) => {
   const { name, url, contentType } = attachment
 
   return (
     <div
       data-testid='input-attachment-preview'
-      className='group relative size-24 overflow-hidden rounded-lg border bg-muted'
+      className={cn(
+        'group relative size-24 overflow-hidden rounded-lg border bg-muted',
+        className
+      )}
     >
       {contentType?.startsWith('image') ? (
         <img

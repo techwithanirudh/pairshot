@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { APP_NAME } from '@/lib/constants'
 
 export function UnsupportedPlatform() {
   return (
@@ -19,8 +20,8 @@ export function UnsupportedPlatform() {
           Mobile Only Experience
         </CardTitle>
         <CardDescription className='text-center text-muted-foreground'>
-          Add Me is designed exclusively for mobile devices. Please open this
-          app on your smartphone to capture and combine photos with AI.
+          {APP_NAME} is designed exclusively for mobile devices. Please open
+          this app on your smartphone to capture and combine photos with AI.
         </CardDescription>
       </CardHeader>
 
