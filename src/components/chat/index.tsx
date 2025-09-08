@@ -104,6 +104,7 @@ function Chat() {
         setUploadQueue([])
       }
     },
+    // biome-ignore lint/correctness/useExhaustiveDependencies: uploadFile changes on every re-render and should not be used as a hook dependency
     [uploadFile]
   )
 

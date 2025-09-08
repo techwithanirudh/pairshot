@@ -2,10 +2,10 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { anonymous } from 'better-auth/plugins'
 import { headers } from 'next/headers'
+import type { NextRequest } from 'next/server'
 import { env } from '@/env'
 import { db } from '@/server/db'
 import * as schema from '@/server/db/schema'
-import type { NextRequest } from 'next/server'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {

@@ -1,4 +1,6 @@
 'use client'
+import { XIcon } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import {
@@ -7,10 +9,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from './ui/dialog'
-import { motion } from 'motion/react'
-import { RefreshCcw, XIcon } from 'lucide-react'
 
 export default function Page() {
   return (
@@ -50,8 +49,7 @@ function InstallPrompt() {
         <div className='absolute inset-0 bg-background/50 backdrop-blur-sm' />
         <div className='relative z-10 flex flex-1 items-center justify-between px-safe-or-4'>
           <div className='flex-1 text-sm'>
-            This site is optimized as a Progressive Web App. Install for a
-            better experience.
+            Please install the app to get the best experience.
           </div>
 
           <div className='flex items-center space-x-3'>
@@ -59,7 +57,7 @@ function InstallPrompt() {
               <Button
                 variant='ghost'
                 size='sm'
-                className='hover:!bg-accent/30 border bg-accent/20 text-accent-foreground backdrop-blur-md h-9'
+                className='hover:!bg-accent/30 h-9 border bg-accent/20 text-accent-foreground backdrop-blur-md'
                 aria-label={`Install`}
                 onClick={() => setDialogOpen(true)}
               >
