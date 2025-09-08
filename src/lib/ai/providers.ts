@@ -1,12 +1,8 @@
-import { openai } from '@ai-sdk/openai'
+import { google } from '@ai-sdk/google'
 import { customProvider } from 'ai'
 
 export const myProvider = customProvider({
   languageModels: {
-    'chat-model': openai('gpt-4o'),
-    'chat-model-reasoning': openai('gpt-5'),
-  },
-  imageModels: {
-    'small-model': openai.imageModel('dall-e-3'),
+    'chat-model': google.languageModel('gemini-2.5-flash-image-preview'),
   },
 })

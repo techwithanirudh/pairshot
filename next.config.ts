@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  typedRoutes: true,
   headers: async () => [
     {
       source: '/(.*)',
