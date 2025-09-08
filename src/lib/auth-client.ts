@@ -1,9 +1,12 @@
-import { inferAdditionalFields } from 'better-auth/client/plugins'
+import {
+  anonymousClient,
+  inferAdditionalFields,
+} from 'better-auth/client/plugins'
 import { createAuthClient } from 'better-auth/react'
 import { toast } from 'sonner'
-import { anonymousClient } from 'better-auth/client/plugins'
 
 import type { auth } from '@/server/auth'
+// import { env } from '@/env'
 
 // @see https://github.com/better-auth/better-auth/issues/1391
 export const authClient: ReturnType<typeof createAuthClient> = createAuthClient(

@@ -39,3 +39,5 @@ When you visit  the website on mobile show how to add PWA
 Re-do the user interface to not be a chat app, but rather show a pretty stacked uploading thing screen
 Then first-auto prompt the AI to add thest two people and then show edit button
 Add detailed setup insturctions
+Add option to bypass mobile limits
+Fix bug that calls session a hudnred times

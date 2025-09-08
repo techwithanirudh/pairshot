@@ -4,17 +4,14 @@ import {
   streamText,
   type UIMessage,
 } from 'ai'
-import { headers } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { myProvider } from '@/lib/ai/providers'
-import { auth } from '@/server/auth'
+import { getSession } from '@/server/auth'
 
 export const maxDuration = 30
 
-export async function POST(req: Request) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+export async function GET(req: NextRequest) {
+  const session = await getSession(req)
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

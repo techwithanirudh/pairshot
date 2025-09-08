@@ -42,6 +42,7 @@ export function Providers({ children }: { children: ReactNode }) {
           onSessionChange={() => {
             router.refresh()
           }}
+          social={{ providers: ['anonymous'] }}
           Link={Link}
         >
           <ProgressProvider

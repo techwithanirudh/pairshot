@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   if (!sessionCookie) {
     const redirectTo = request.nextUrl.pathname + request.nextUrl.search
     return NextResponse.redirect(
-      new URL(`/auth/sign-in?redirectTo=${redirectTo}`, request.url)
+      new URL(`/api/auth/guest?redirectTo=${redirectTo}`, request.url)
     )
   }
 

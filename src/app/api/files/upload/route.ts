@@ -1,8 +1,7 @@
 import { put } from '@vercel/blob'
-import { headers } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { auth } from '@/server/auth'
+import { getSession } from '@/server/auth'
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
@@ -17,10 +16,8 @@ const FileSchema = z.object({
     }),
 })
 
-export async function POST(request: Request) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+export async function POST(request: NextRequest) {
+  const session = await getSession(request)
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

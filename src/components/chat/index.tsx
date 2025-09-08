@@ -1,12 +1,16 @@
 'use client'
 
 import { useChat } from '@ai-sdk/react'
+import { RefreshCcwIcon } from 'lucide-react'
 import type React from 'react'
-import { Fragment, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import type { Attachment } from '@/lib/types'
-import { PreviewAttachment } from './preview-attachment'
-import Camera from '../camera'
+import { Action, Actions } from '@/components/ai-elements/actions'
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from '@/components/ai-elements/conversation'
 import {
   PromptInput,
   PromptInputSubmit,
@@ -14,18 +18,13 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from '@/components/ai-elements/prompt-input'
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from '@/components/ai-elements/conversation'
-import { Action, Actions } from '@/components/ai-elements/actions'
-import { Loader } from '../ai-elements/loader'
+import type { Attachment } from '@/lib/types'
 import { cn } from '@/lib/utils'
-import { CopyIcon, RefreshCcwIcon } from 'lucide-react'
-import { Message } from '../ai-elements/message'
-import { MessageContent } from '../ai-elements/message'
+import { Loader } from '../ai-elements/loader'
+import { Message, MessageContent } from '../ai-elements/message'
 import { Response } from '../ai-elements/response'
+import Camera from '../camera'
+import { PreviewAttachment } from './preview-attachment'
 
 function Chat() {
   const [input, setInput] = useState('')
@@ -197,7 +196,7 @@ function Chat() {
           <div className='relative flex w-full flex-col gap-4'>
             <PromptInput
               onSubmit={handleSubmit}
-              className='border-none bg-card rounded-2xl'
+              className='rounded-2xl border-none bg-card'
             >
               {(attachments.length > 0 || uploadQueue.length > 0) && (
                 <div

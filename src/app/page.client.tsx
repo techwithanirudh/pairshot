@@ -1,22 +1,14 @@
 'use client'
-import type { Session, User } from 'better-auth'
 import { Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import Chat from '@/components/chat'
 import { UnsupportedPlatform } from '@/components/unsupported-platform'
 
-function Page({
-  session: _session,
-}: {
-  session: {
-    user: User
-    session: Session
-  }
-}) {
+function Page() {
   const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setMounted(true)
   }, [])
 

@@ -5,13 +5,13 @@ import type { ReactNode } from 'react'
 import '@/styles/globals.css'
 
 import InstallPrompt from '@/components/install-prompt'
-import { Providers } from './providers'
 import {
-  APP_NAME,
-  APP_DESCRIPTION,
   APP_DEFAULT_TITLE,
+  APP_DESCRIPTION,
+  APP_NAME,
   APP_TITLE_TEMPLATE,
 } from '@/lib/constants'
+import { Providers } from './providers'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
