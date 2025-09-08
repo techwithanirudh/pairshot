@@ -11,10 +11,10 @@ Make a template for AI SDK saying AI SDK Nano banana with the chat
 Env add ability to have multiple cors origins through zod refine
 
 Use safe area insets so that it works in safari, etc. for padding, also remove the header at the top
-Create an icon from ray.so
+- [x] Create an icon from ray.so
 Add ability to zoom on camera
 App breaks in landscape mode
-Set status bar color to black
+[x] Set status bar color to black
 Fix the bug where the camera takes a sec to load and zooms in at the start
 
 Remove authentication
@@ -34,3 +34,10 @@ Write in react native with expo-camera
 Add an image generating animation the image will be at the top
 Finally after pretty animation etc
 Add ability to view message history
+When you visit  the website on mobile show how to add PWA
+
+Re-do the user interface to not be a chat app, but rather show a pretty stacked uploading thing screen
+Then first-auto prompt the AI to add thest two people and then show edit button
+Add detailed setup insturctions
+Add option to bypass mobile limits
+Fix bug that calls session a hudnred times

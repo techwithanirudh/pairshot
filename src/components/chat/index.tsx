@@ -1,12 +1,16 @@
 'use client'
 
 import { useChat } from '@ai-sdk/react'
+import { RefreshCcwIcon } from 'lucide-react'
 import type React from 'react'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import type { Attachment } from '@/lib/types'
-import { PreviewAttachment } from './preview-attachment'
-import Camera from '../camera'
+import { Action, Actions } from '@/components/ai-elements/actions'
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from '@/components/ai-elements/conversation'
 import {
   PromptInput,
   PromptInputSubmit,
@@ -14,14 +18,13 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from '@/components/ai-elements/prompt-input'
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from '@/components/ai-elements/conversation'
-import { Action, Actions } from '@/components/ai-elements/actions'
-import { Loader } from '../ai-elements/loader'
+import type { Attachment } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { Loader } from '../ai-elements/loader'
+import { Message, MessageContent } from '../ai-elements/message'
+import { Response } from '../ai-elements/response'
+import Camera from '../camera'
+import { PreviewAttachment } from './preview-attachment'
 
 function Chat() {
   const [input, setInput] = useState('')
@@ -115,98 +118,130 @@ function Chat() {
           </Camera.Preview>
         </Camera.Root>
       ) : (
-        <div className='relative flex flex-1 flex-col items-center justify-center p-2'>
-          <Conversation className='h-full overflow-y-auto'>
-            <ConversationContent>
-              {messages.map((message) => (
-                <div key={message.id}>
-                  <div
-                    className={cn('flex flex-col', {
-                      'gap-2 md:gap-4': message.parts?.some(
-                        (p) => p.type === 'text' && p.text?.trim()
-                      ),
-                      'min-h-96': message.role === 'assistant' && true,
-                      'w-full':
-                        (message.role === 'assistant' &&
-                          message.parts?.some(
-                            (p) => p.type === 'text' && p.text?.trim()
-                          )) ||
-                        true,
-                      'max-w-[90%] sm:max-w-[min(fit-content,80%)]':
-                        message.role === 'user' && true,
-                    })}
-                  >
-                    {message.parts.filter((part) => part.type === 'file')
-                      .length > 0 && (
-                      <div
-                        data-testid={`message-attachments`}
-                        className='flex flex-row justify-end gap-2'
-                      >
-                        {message.parts
-                          .filter((part) => part.type === 'file')
-                          .map((attachment) => (
-                            <PreviewAttachment
-                              key={attachment.url}
-                              attachment={{
-                                name: attachment.filename ?? 'file',
-                                contentType: attachment.mediaType,
-                                url: attachment.url,
-                              }}
-                            />
-                          ))}
-                      </div>
-                    )}
+        <div className='relative flex flex-1 flex-col items-center justify-center p-safe-or-2'>
+          {messages.length > 0 && (
+            <Conversation className='h-full overflow-y-auto'>
+              <ConversationContent>
+                {messages.map((message) => (
+                  <div key={message.id}>
+                    <div
+                      className={cn('flex flex-col', {
+                        'gap-2 md:gap-4': message.parts?.some(
+                          (p) => p.type === 'text' && p.text?.trim()
+                        ),
+                        'min-h-96': message.role === 'assistant' && true,
+                        'w-full':
+                          (message.role === 'assistant' &&
+                            message.parts?.some(
+                              (p) => p.type === 'text' && p.text?.trim()
+                            )) ||
+                          true,
+                        'max-w-[90%] sm:max-w-[min(fit-content,80%)]':
+                          message.role === 'user' && true,
+                      })}
+                    >
+                      {message.parts.filter((part) => part.type === 'file')
+                        .length > 0 && (
+                        <Message from={message.role}>
+                          <MessageContent>
+                            <div
+                              data-testid={`message-attachments`}
+                              className='flex flex-row justify-end gap-2'
+                            >
+                              {message.parts
+                                .filter((part) => part.type === 'file')
+                                .map((attachment) => (
+                                  <PreviewAttachment
+                                    key={attachment.url}
+                                    attachment={{
+                                      name: attachment.filename ?? 'file',
+                                      contentType: attachment.mediaType,
+                                      url: attachment.url,
+                                    }}
+                                    className={cn({
+                                      'size-full': message.role === 'assistant',
+                                    })}
+                                  />
+                                ))}
+                            </div>
+                            <Response>
+                              {message.parts
+                                .filter((part) => part.type === 'text')
+                                .map((part) => part.text)
+                                .join('')}
+                            </Response>
+                          </MessageContent>
+                          {message.role === 'assistant' &&
+                            message.id === messages.at(-1)?.id && (
+                              <Actions className='mt-2'>
+                                <Action
+                                  onClick={() => regenerate()}
+                                  label='Retry'
+                                >
+                                  <RefreshCcwIcon className='size-3' />
+                                </Action>
+                              </Actions>
+                            )}
+                        </Message>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-              {status === 'submitted' && <Loader />}
-            </ConversationContent>
-            <ConversationScrollButton />
-          </Conversation>
-          <PromptInput onSubmit={handleSubmit} className='border-none bg-card'>
-            {(attachments.length > 0 || uploadQueue.length > 0) && (
-              <div
-                data-testid='attachments-preview'
-                className='flex flex-row items-end gap-2 overflow-x-scroll px-3 py-2'
-              >
-                {attachments.map((attachment) => (
-                  <PreviewAttachment
-                    key={attachment.url}
-                    attachment={attachment}
-                    onRemove={() => {
-                      setAttachments((currentAttachments) =>
-                        currentAttachments.filter(
-                          (a) => a.url !== attachment.url
+                ))}
+                {status === 'submitted' && <Loader />}
+              </ConversationContent>
+              <ConversationScrollButton />
+            </Conversation>
+          )}
+
+          <div className='relative flex w-full flex-col gap-4'>
+            <PromptInput
+              onSubmit={handleSubmit}
+              className='rounded-2xl border-none bg-card'
+            >
+              {(attachments.length > 0 || uploadQueue.length > 0) && (
+                <div
+                  data-testid='attachments-preview'
+                  className='flex flex-row items-end gap-2 overflow-x-scroll px-3 py-2'
+                >
+                  {attachments.map((attachment) => (
+                    <PreviewAttachment
+                      key={attachment.url}
+                      attachment={attachment}
+                      onRemove={() => {
+                        setAttachments((currentAttachments) =>
+                          currentAttachments.filter(
+                            (a) => a.url !== attachment.url
+                          )
                         )
-                      )
-                    }}
-                  />
-                ))}
+                      }}
+                    />
+                  ))}
 
-                {uploadQueue.map((filename) => (
-                  <PreviewAttachment
-                    key={filename}
-                    attachment={{
-                      url: '',
-                      name: filename,
-                      contentType: '',
-                    }}
-                    isUploading={true}
-                  />
-                ))}
-              </div>
-            )}
+                  {uploadQueue.map((filename) => (
+                    <PreviewAttachment
+                      key={filename}
+                      attachment={{
+                        url: '',
+                        name: filename,
+                        contentType: '',
+                      }}
+                      isUploading={true}
+                    />
+                  ))}
+                </div>
+              )}
 
-            <PromptInputTextarea
-              onChange={(e) => setInput(e.target.value)}
-              value={input}
-              placeholder='Modify the image in any way you want...'
-            />
-            <PromptInputToolbar>
-              <PromptInputTools />
-              <PromptInputSubmit disabled={!input} status={status} />
-            </PromptInputToolbar>
-          </PromptInput>
+              <PromptInputTextarea
+                onChange={(e) => setInput(e.target.value)}
+                value={input}
+                placeholder='Modify the image in any way you want...'
+              />
+              <PromptInputToolbar>
+                <PromptInputTools />
+                <PromptInputSubmit disabled={!input} status={status} />
+              </PromptInputToolbar>
+            </PromptInput>
+          </div>
         </div>
       )}
     </div>

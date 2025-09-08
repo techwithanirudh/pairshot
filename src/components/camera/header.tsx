@@ -19,7 +19,7 @@ export function Header() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className='absolute inset-0 z-10 flex h-16'
+      className='absolute inset-0 top-safe-offset-0 z-10 flex h-16'
     >
       <div className='absolute inset-0 bg-background/30 backdrop-blur-sm' />
       <div className='relative z-10 flex flex-1 items-center justify-between px-safe-or-4'>

@@ -9,7 +9,7 @@ export function Controls() {
   const { capture, capturedImages, onFinish } = useCamera()
 
   return (
-    <div className='absolute right-safe-offset-0 bottom-safe-offset-12 left-safe-offset-0 z-10'>
+    <div className='absolute right-safe-offset-0 bottom-safe-offset-8 left-safe-offset-0 z-10'>
       <div className='flex items-center justify-center'>
         <div className='relative'>
           <motion.div

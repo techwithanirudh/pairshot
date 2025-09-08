@@ -4,6 +4,13 @@ import type { ReactNode } from 'react'
 
 import '@/styles/globals.css'
 
+import InstallPrompt from '@/components/install-prompt'
+import {
+  APP_DEFAULT_TITLE,
+  APP_DESCRIPTION,
+  APP_NAME,
+  APP_TITLE_TEMPLATE,
+} from '@/lib/constants'
 import { Providers } from './providers'
 
 const geistSans = Geist({
@@ -17,14 +24,47 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Add Me',
-  description: 'Add Me',
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
+  },
+  description: APP_DESCRIPTION,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: APP_NAME,
+    startupImage: ['/icon-192x192.png', '/icon-512x512.png'],
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    siteName: APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary',
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
 }
 
 export const viewport: Viewport = {
   initialScale: 1,
+  minimumScale: 1,
+  width: 'device-width, shrink-to-fit=no',
+  userScalable: false,
   viewportFit: 'cover',
-  width: 'device-width',
+  themeColor: '#09090B',
 }
 
 export default function RootLayout({
@@ -34,19 +74,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <head>
-        <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'
-        />
-        <meta name='theme-color' content='var(--background)' />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-svh flex-col antialiased`}
       >
         <Providers>
-          {/* <Header /> */}
           {children}
+          <InstallPrompt />
         </Providers>
       </body>
     </html>

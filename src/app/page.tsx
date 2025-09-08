@@ -1,18 +1,15 @@
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Page from '@/app/page.client'
-import { auth } from '@/server/auth'
+import { getSession } from '@/server/auth'
 
 const Home = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  const session = await getSession()
 
   if (!session) {
-    return redirect('/auth/sign-in')
+    return redirect('/api/auth/guest')
   }
 
-  return <Page session={session} />
+  return <Page />
 }
 
 export default Home
