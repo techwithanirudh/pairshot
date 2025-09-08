@@ -1,4 +1,4 @@
-When you first sign up have a welcome to Add Me screen
+When you first sign up have a welcome to PairShot screen
 Then it will show the video by google retail on how it works or provide tips mentioned in that video
 Then open a camera screen in this screen you can take a photo
 When you click the photo it will show a general outline on where the person was
