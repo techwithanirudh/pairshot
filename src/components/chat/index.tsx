@@ -92,6 +92,18 @@ function Chat() {
         console.error('Error uploading files!', error)
       } finally {
         setUploadQueue([])
+        sendMessage({
+          role: 'user',
+          parts: [
+            ...attachments.map((attachment) => ({
+              type: 'file' as const,
+              url: attachment.url,
+              name: attachment.name,
+              mediaType: attachment.contentType,
+            })),
+            { type: 'text', text: "You are PairShot, and advanced AI that merges two images together, usually Group photos and adds yourself in later so no one gets left out. Here, you are provided wit htwo images, combine these two images together very seamlessly. Think about the person being added, for example put their hand behind not forward etc, to make it realsitic and not artificial, this is a very important task, do not fail" },
+          ],
+        })
       }
     },
     // biome-ignore lint/correctness/useExhaustiveDependencies: uploadFile changes on every re-render and should not be used as a hook dependency
