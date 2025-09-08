@@ -19,9 +19,7 @@ export async function GET(request: NextRequest) {
     headers: request.headers,
   })
 
-  const response = NextResponse.redirect(
-    new URL(redirectUrl, request.url)
-  )
+  const response = NextResponse.redirect(new URL(redirectUrl, request.url))
 
   const setCookie = signInResponse.headers.get('set-cookie')
   if (setCookie) {

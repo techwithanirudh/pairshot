@@ -25,4 +25,4 @@ export const getSession = async (request?: NextRequest) => {
   return auth.api.getSession({
     headers: request ? request.headers : await headers(),
   })
-} 
+}
