@@ -1,38 +1,28 @@
 'use client'
 
 import { useChat } from '@ai-sdk/react'
-import { RefreshCcwIcon } from 'lucide-react'
+import Image from 'next/image'
 import type React from 'react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { Action, Actions } from '@/components/ai-elements/actions'
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from '@/components/ai-elements/conversation'
 import {
   PromptInput,
   PromptInputSubmit,
   PromptInputTextarea,
-  PromptInputToolbar,
-  PromptInputTools,
 } from '@/components/ai-elements/prompt-input'
 import type { Attachment } from '@/lib/types'
-import { cn } from '@/lib/utils'
-import { Loader } from '../ai-elements/loader'
-import { Message, MessageContent } from '../ai-elements/message'
-import { Response } from '../ai-elements/response'
 import Camera from '../camera'
+import type { FilePart } from 'ai'
 import { PreviewAttachment } from './preview-attachment'
+import { Loader2 } from 'lucide-react'
 
 function Chat() {
   const [input, setInput] = useState('')
-  const { sendMessage, status, messages, regenerate } = useChat()
+  const { sendMessage, status, messages } = useChat()
   const [attachments, setAttachments] = useState<Array<Attachment>>([])
-  const [uploadQueue, setUploadQueue] = useState<Array<string>>([])
 
   const [isCameraOpen, setIsCameraOpen] = useState(true)
+  const [uploadQueue, setUploadQueue] = useState<Array<string>>([])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -108,6 +98,36 @@ function Chat() {
     [uploadFile]
   )
 
+  const isImageFilePart = (part: unknown): part is FilePart => {
+    const candidate = part as {
+      type?: unknown
+      url?: unknown
+      mediaType?: unknown
+    }
+    return (
+      candidate !== null &&
+      typeof candidate === 'object' &&
+      candidate.type === 'file' &&
+      typeof candidate.url === 'string' &&
+      (candidate.mediaType === undefined ||
+        typeof candidate.mediaType === 'string')
+    )
+  }
+
+  const image = (() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role !== 'assistant') return undefined
+      const parts = messages[i].parts ?? []
+      for (let j = parts.length - 1; j >= 0; j--) {
+        const p = parts[j]
+        if (isImageFilePart(p) && p.mediaType?.startsWith?.('image')) {
+          return p.url
+        }
+      }
+    }
+    return undefined
+  })()
+
   return (
     <div className='relative flex h-screen flex-col'>
       {isCameraOpen ? (
@@ -119,82 +139,39 @@ function Chat() {
           </Camera.Preview>
         </Camera.Root>
       ) : (
-        <div className='relative flex flex-1 flex-col items-center justify-center p-safe-or-2'>
-          {messages.length > 0 && (
-            <Conversation className='h-full overflow-y-auto'>
-              <ConversationContent>
-                {messages.map((message) => (
-                  <div key={message.id}>
-                    <div
-                      className={cn('flex flex-col', {
-                        'gap-2 md:gap-4': message.parts?.some(
-                          (p) => p.type === 'text' && p.text?.trim()
-                        ),
-                        'min-h-96': message.role === 'assistant' && true,
-                        'w-full':
-                          (message.role === 'assistant' &&
-                            message.parts?.some(
-                              (p) => p.type === 'text' && p.text?.trim()
-                            )) ||
-                          true,
-                        'max-w-[90%] sm:max-w-[min(fit-content,80%)]':
-                          message.role === 'user' && true,
-                      })}
-                    >
-                      {message.parts.filter((part) => part.type === 'file')
-                        .length > 0 && (
-                        <Message from={message.role}>
-                          <MessageContent>
-                            <div
-                              data-testid={`message-attachments`}
-                              className='flex flex-row justify-end gap-2'
-                            >
-                              {message.parts
-                                .filter((part) => part.type === 'file')
-                                .map((attachment) => (
-                                  <PreviewAttachment
-                                    key={attachment.url}
-                                    attachment={{
-                                      name: attachment.filename ?? 'file',
-                                      contentType: attachment.mediaType,
-                                      url: attachment.url,
-                                    }}
-                                    className={cn({
-                                      'size-full': message.role === 'assistant',
-                                    })}
-                                  />
-                                ))}
-                            </div>
-                            <Response>
-                              {message.parts
-                                .filter((part) => part.type === 'text')
-                                .map((part) => part.text)
-                                .join('')}
-                            </Response>
-                          </MessageContent>
-                          {message.role === 'assistant' &&
-                            message.id === messages.at(-1)?.id && (
-                              <Actions className='mt-2'>
-                                <Action
-                                  onClick={() => regenerate()}
-                                  label='Retry'
-                                >
-                                  <RefreshCcwIcon className='size-3' />
-                                </Action>
-                              </Actions>
-                            )}
-                        </Message>
-                      )}
-                    </div>
+        <div className='relative flex flex-1 flex-col'>
+          <div className='relative flex-1'>
+            {image ? (
+              <Image
+                src={image}
+                alt='latest result'
+                fill
+                sizes='100vw'
+                className='object-cover'
+                unoptimized
+              />
+            ) : (
+              <div className='flex h-full w-full items-center justify-center text-muted-foreground'>
+                {uploadQueue.length > 0 && (
+                  <div className='flex items-center gap-2'>
+                    <p>Uploading...</p> <Loader2 className='animate-spin' />
                   </div>
-                ))}
-                {status === 'submitted' && <Loader />}
-              </ConversationContent>
-              <ConversationScrollButton />
-            </Conversation>
-          )}
+                )}
+                {status === 'submitted' || status === 'streaming'
+                  ? 'Generating image...'
+                  : ''}
+                {!image &&
+                  status !== 'submitted' &&
+                  status !== 'streaming' &&
+                  uploadQueue.length === 0 && (
+                    <p>Send your prompt to generate an image</p>
+                  )}
+              </div>
+            )}
+            <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20' />
+          </div>
 
-          <div className='relative flex w-full flex-col gap-4'>
+          <div className='relative w-full p-safe-or-2'>
             <PromptInput
               onSubmit={handleSubmit}
               className='rounded-2xl border-none bg-card'
@@ -235,12 +212,24 @@ function Chat() {
               <PromptInputTextarea
                 onChange={(e) => setInput(e.target.value)}
                 value={input}
-                placeholder='Modify the image in any way you want...'
+                placeholder='Describe an edit…'
+                disabled={
+                  status === 'submitted' ||
+                  status === 'streaming' ||
+                  uploadQueue.length > 0
+                }
               />
-              <PromptInputToolbar>
-                <PromptInputTools />
-                <PromptInputSubmit disabled={!input} status={status} />
-              </PromptInputToolbar>
+              <div className='flex items-center justify-end p-1'>
+                <PromptInputSubmit
+                  disabled={
+                    !input ||
+                    status === 'submitted' ||
+                    status === 'streaming' ||
+                    uploadQueue.length > 0
+                  }
+                  status={status}
+                />
+              </div>
             </PromptInput>
           </div>
         </div>

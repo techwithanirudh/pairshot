@@ -10,7 +10,7 @@ import { getSession } from '@/server/auth'
 
 export const maxDuration = 30
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const session = await getSession(req)
 
   if (!session) {
