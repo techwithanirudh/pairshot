@@ -9,7 +9,7 @@
     "typescript"
   ],
   "files": ["**", ".vscode/**", ".github/**"],
-  "ignorePaths": ["bun.lock"],
+  "ignorePaths": ["bun.lock", "drizzle/**"],
   "ignoreRegExpList": ["apiKey='[a-zA-Z0-9-]{32}'"],
   "import": [
     "@cspell/dict-bash/cspell-ext.json",
@@ -43,6 +43,8 @@
     "nums",
     "dall",
     "daveyplate",
-    "neondatabase"
+    "neondatabase",
+    "shadcn",
+    "requiredness"
   ]
 }
